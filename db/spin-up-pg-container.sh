@@ -9,8 +9,6 @@ set -x # Print commands with verbosity info
 
 # Required arguments
 PG_VERSION=13.15
-HOST_PORT=5432
-CONTAINER_PORT=5432
 
 CONTAINER_NAME=pg-docker
 
@@ -25,13 +23,15 @@ docker stop "${CONTAINER_NAME}"
 docker run \
 	--name "${CONTAINER_NAME}" \
 	--rm -d \
-	-p "${HOST_PORT}":"${CONTAINER_PORT}" \
+	-p "${PG_PORT}":"${PG_PORT}" \
 	-e POSTGRES_PASSWORD="${PG_PASSWORD}" \
+	-e POSTGRES_USER="${PG_USER}" \
+	-h "${PG_HOST}" \
 	-v "${PWD}"/.pg-data:/var/lib/postgresql/data \
 	postgres:"${PG_VERSION}"
 
 # Test if we have connectivity to local postgresql
-nc -z -v 127.0.0.1 "${HOST_PORT}" || ( echo "Unable to connect to database check above commands and exit codes" && exit 2 )
+#nc -z -v "${PG_HOST}" "${HOST_PORT}" || ( echo "Unable to connect to database check above commands and exit codes" && exit 2 )
 
 set +x
 
