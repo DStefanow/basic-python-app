@@ -31,7 +31,7 @@ docker run \
 	postgres:"${PG_VERSION}"
 
 # Test if we have connectivity to local postgresql
-#nc -z -v "${PG_HOST}" "${HOST_PORT}" || ( echo "Unable to connect to database check above commands and exit codes" && exit 2 )
+nc -z -v "${PG_HOST}" "${HOST_PORT}" || ( echo "Unable to connect to database check above commands and exit codes" && exit 2 )
 
 set +x
 
