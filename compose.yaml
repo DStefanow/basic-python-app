@@ -1,0 +1,39 @@
+name: basic-python-app
+
+services:
+  # PostgreSQL database application
+  db-backend:
+    image: postgres:13.15
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: /run/secrets/db_root_password
+    secrets:
+      - db_root_password
+
+  # Main application implementation
+  app:
+    # Add dependency between application container and backend databse
+    depends_on:
+      - db-backend
+    build: .
+    ports:
+      - "5000:5000" # Expose port to host for test purpose
+    environment:
+      PG_HOST: db-backend
+      PG_USER: postgres
+      PG_DATABASE: postgres
+      PG_PORT: 5432
+      PG_PASSWORD: /run/secrets/db_root_password
+    secrets:
+      - db_root_password
+
+# Load secrets from specified local file
+secrets:
+  # Store locally postgreSQL password for root user in '.env' file which is excluded from git
+  db_root_password:
+    file: .env
+
+# Declare volumes used by main containers in project namespace
+volumes:
+  db_data: # Basic volume for database service
