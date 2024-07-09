@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.name }}-service
+  labels:
+    app: {{ .Values.app.name }}
+spec:
+  selector:
+    app: {{ .Values.app.name }}
+  ports:
+    - port: {{ .Values.app.port }}
+      targetPort: {{ .Values.app.port }}
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-deployment
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      initContainers:
+      - name: check-postgres-db-connection
+        image: {{ .Values.postgres.image.name }}:{{ .Values.postgres.image.tag }}
+        command: ['sh', '-c', 'until pg_isready -h $PG_HOST -p $PG_PORT; do echo Waiting for database $PG_HOST; sleep 5; done']
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.app.name }}-config
+      containers:
+      - name: basic-python-app
+        image: {{ .Values.app.image.name }}:{{ .Values.app.image.tag }}
+        ports:
+        - containerPort: {{ .Values.app.port }}
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.app.name }}-config
