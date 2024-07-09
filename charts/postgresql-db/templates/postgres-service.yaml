@@ -33,12 +33,9 @@ spec:
             - name: POSTGRES_USER
               value: {{ .Values.postgres.db.user }}
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.postgres.name }}-secret
-                  key: password
+              value: {{ .Values.postgres.db.password }}
             - name: PGDATA
-              value: /var/lib/postgresql/data/pgdata
+              value: {{ .Values.postgres.db.pgData }}
           ports:
             - containerPort: {{ .Values.postgres.db.port }}
               name: {{ .Values.postgres.name }}
