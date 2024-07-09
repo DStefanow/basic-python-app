@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.postgres.volume.name }}-pv
+  labels:
+    type: local
+spec:
+  storageClassName: {{ .Values.postgres.volume.storageClassName }}
+  capacity:
+    storage: {{ .Values.postgres.volume.size }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/postgresql
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.postgres.volume.name }}-pvc
+spec:
+  storageClassName: manual
+  resources:
+    requests:
+      storage: {{ .Values.postgres.volume.size }}
+  accessModes:
+    - ReadWriteOnce
+  volumeName: {{ .Values.postgres.volume.name }}-pv

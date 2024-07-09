@@ -1,0 +1,15 @@
+postgres:
+  name: postgres
+  image:
+    name: dstefanow/postgres
+    tag: 13.15
+  db:
+    user: postgres
+    password: this-is-an-example-password-in-git
+    port: "5432"
+    pgData: /var/lib/postgresql/data
+  volume:
+    name: database-storage
+    storageClassName: manual
+    size: 10Gi
+  replicas: 1
