@@ -1,0 +1,7 @@
+ingress:
+  name: python-app-ingress
+  hostname: example-python-app-with-kong.example
+
+service:
+  name: basic-python-service
+  port: 5000

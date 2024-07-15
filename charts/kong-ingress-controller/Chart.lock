@@ -1,0 +1,9 @@
+dependencies:
+- name: ingress
+  repository: https://charts.konghq.com
+  version: 0.13.1
+- name: python-app
+  repository: file://../python-app/
+  version: 0.2.0
+digest: sha256:bb5b9469333befd839c612e58f019f1a1d848faaee27f8141ba23006e858fbd6
+generated: "2024-07-16T01:27:44.083234+03:00"
