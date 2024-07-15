@@ -44,3 +44,20 @@ All builded images are stored in Docker Hub both on **ARM/AMD64 architectures**:
 The following diagram shows basic concept of the architecture:
 ![Application architecture](./diagrams/application-architecture.drawio.png)
 
+# Expose our Application with Kong ingress controller (KIC)
+
+For that purpose the only thing that you need to do is:
+1. Install our Helm repository that has a dependency for Kong ingress controller and very simple ingress configuration:
+
+```
+minikube start
+cd charts/
+helm dependency build kong-ingress-controller
+helm install kong kong-ingress-controller -n kong --create-namespace
+```
+
+2. Forward the port of the kong gateway pod:
+
+```
+kubectl -n kong port-forward pod/kong-gateway-<pod-id> 8000:8000
+```
